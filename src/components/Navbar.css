@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+.nav {
+  background-color: black;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 70px;
+  padding: 0 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+/* Logo Section */
+.logosec {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logoHome {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  border: 2px solid skyblue;
+}
+
+.nav .logosec h1:hover {
+  color: chartreuse;
+}
+
+.logosec h1 {
+  font-size: 28px;
+  font-weight: 600;
+  color: rgb(12, 151, 198);
+  margin: 0;
+}
+
+/* Navbar Menu */
+.nav ul {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  list-style: none;
+}
+
+.nav ul li {
+  margin: 0;
+}
+
+.nav ul li a {
+  color: rgb(16, 169, 230);
+  text-decoration: none;
+  font-size: 16px;
+  padding: 5px 10px;
+  transition: 0.3s;
+}
+
+.nav ul li a:hover {
+  color: chartreuse;
+}
+
+/* Buttons */
+.navbtns {
+  display: flex;
+  gap: 10px;
+}
+
+.navbtns button {
+  background-color: rgb(6, 79, 235);
+  color: white;
+  padding: 7px 15px;
+  border-radius: 7px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0px 0px 8px chartreuse;
+}
+
+.navbtns button:hover {
+  color: chartreuse;
+  border: 1px solid chartreuse;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .nav {
+    flex-direction: column;
+    height: auto;
+    padding: 12px 0;
+  }
+
+  .nav ul {
+    flex-direction: column;
+    margin-top: 10px;
+    gap: 10px;
+  }
+
+  .navbtns {
+    flex-direction: column;
+    width: 100%;
+    margin-top: 10px;
+    align-items: center;
+  }
+
+  .navbtns button {
+    width: 90%;
+  }
+}

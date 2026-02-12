@@ -1,0 +1,64 @@
+.report-container {
+  min-height: 100vh;
+  padding: 40px 20px;
+  background: #f3f4f6;
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+.report-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.report-subtitle {
+  margin-top: 10px;
+  font-size: 16px;
+  color: #4b5563;
+}
+
+.report-options {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  flex-wrap: wrap;
+}
+
+.report-card {
+  width: 280px;
+  padding: 25px;
+  background: white;
+  border-radius: 12px;
+  text-align: center;
+  text-decoration: none;
+  color: #111827;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transition: 0.3s ease;
+}
+
+.report-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+}
+
+.report-icon {
+  font-size: 40px;
+  margin-bottom: 10px;
+}
+
+.lost-card {
+  border-top: 4px solid #ef4444;
+}
+
+.found-card {
+  border-top: 4px solid #3b82f6;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .report-card {
+    width: 90%;
+  }
+}

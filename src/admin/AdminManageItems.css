@@ -1,0 +1,142 @@
+/* ---------------- Admin Manage Items Page ---------------- */
+.admin-manage-items {
+  min-height: 100vh;
+  background-color: #f3f4f6;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+/* Page Header */
+.admin-manage-items h2 {
+  font-size: 48px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #1f2937;
+}
+
+.admin-manage-items p {
+  font-size: 16px;
+  margin-bottom: 20px;
+  color: #4b5563;
+}
+
+/* Table Container */
+.table-container {
+  overflow-x: auto;
+}
+
+/* Table Styles */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.admin-table thead {
+  background-color: #f3f4f6;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 14px;
+  color: #1f2937;
+}
+
+.admin-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Action Buttons */
+.admin-table button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 5px;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s ease;
+  margin-right: 5px;
+}
+
+.admin-table button:last-child {
+  margin-right: 0;
+}
+
+.admin-table .edit-btn {
+  background-color: #3b82f6; 
+  width: 60px;/* Blue */
+}
+
+.admin-table .edit-btn:hover {
+  background-color: #2563eb;
+}
+
+.admin-table .delete-btn {
+  background-color: #ef4444;
+  width: 60px; /* Red */
+}
+
+.admin-table .delete-btn:hover {
+  background-color: #dc2626;
+}
+
+/* ---------------- Responsive ---------------- */
+@media (max-width: 1024px) {
+  .admin-table th, 
+  .admin-table td {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-manage-items h2 {
+    font-size: 24px;
+  }
+
+  .admin-manage-items p {
+    font-size: 14px;
+  }
+
+  .admin-table th, 
+  .admin-table td {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  .admin-table button {
+    padding: 5px 8px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-manage-items {
+    padding: 15px;
+  }
+
+  .admin-manage-items h2 {
+    font-size: 20px;
+  }
+
+  .admin-manage-items p {
+    font-size: 13px;
+  }
+
+  .admin-table th, 
+  .admin-table td {
+    padding: 6px 8px;
+    font-size: 11px;
+  }
+
+  .admin-table button {
+    padding: 4px 6px;
+    font-size: 11px;
+  }
+}

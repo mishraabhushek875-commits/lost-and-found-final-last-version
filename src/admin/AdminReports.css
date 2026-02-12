@@ -1,0 +1,116 @@
+/* ---------------- Admin Reports Page ---------------- */
+.admin-reports {
+  min-height: 100vh;
+  background-color: #f3f4f6;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+/* Page Header */
+.admin-reports h2 {
+  font-size: 48px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #1f2937;
+}
+
+/* Table Container */
+.table-container {
+  overflow-x: auto;
+}
+
+/* Table Styles */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.admin-table thead {
+  background-color: #f3f4f6;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 14px;
+  color: #1f2937;
+}
+
+.admin-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Status Labels */
+.admin-table td:nth-child(4) {
+  font-weight: 500;
+}
+.approve-btn {
+  background: #28a745;
+  color: white;
+  padding: 6px 10px;
+  border: none;
+  cursor: pointer;
+  margin-right: 6px;
+  border-radius: 4px;
+}
+
+.reject-btn {
+  background: #dc3545;
+  color: white;
+  padding: 6px 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.approve-btn:hover {
+  background: #218838;
+}
+
+.reject-btn:hover {
+  background: #c82333;
+}
+
+
+/* ---------------- Responsive ---------------- */
+@media (max-width: 1024px) {
+  .admin-table th, 
+  .admin-table td {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-reports h2 {
+    font-size: 24px;
+  }
+
+  .admin-table th, 
+  .admin-table td {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-reports {
+    padding: 15px;
+  }
+
+  .admin-reports h2 {
+    font-size: 20px;
+  }
+
+  .admin-table th, 
+  .admin-table td {
+    padding: 6px 8px;
+    font-size: 11px;
+  }
+}

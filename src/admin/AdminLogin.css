@@ -1,0 +1,106 @@
+/* ---------------- Admin Login Page ---------------- */
+.admin-login-page {
+  min-height: 100vh;
+  background-color: #f3f4f6;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-login-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.admin-login-card {
+  background-color: #ffffff;
+  padding: 30px 25px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.admin-login-card h2 {
+  font-size: 34px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #1f2937;
+}
+
+.admin-login-card input {
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 15px;
+  border: 1px solid #d1d5db;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.admin-login-card input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59,130,246,0.2);
+}
+
+.admin-login-card button {
+  width: 100%;
+  padding: 12px;
+  background-color: #3b82f6;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.admin-login-card button:hover {
+  background-color: #2563eb;
+}
+
+/* ---------------- Responsive ---------------- */
+@media (max-width: 768px) {
+  .admin-login-card {
+    padding: 25px 20px;
+  }
+
+  .admin-login-card h2 {
+    font-size: 22px;
+  }
+
+  .admin-login-card input {
+    font-size: 14px;
+    padding: 8px 10px;
+  }
+
+  .admin-login-card button {
+    font-size: 14px;
+    padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-login-card {
+    padding: 20px 15px;
+  }
+
+  .admin-login-card h2 {
+    font-size: 20px;
+  }
+
+  .admin-login-card input {
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+
+  .admin-login-card button {
+    font-size: 13px;
+    padding: 8px;
+  }
+}

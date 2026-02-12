@@ -1,0 +1,73 @@
+.form-container {
+  max-width: 500px;
+  margin: 60px auto;
+  padding: 30px;
+  background-color: #ffffff; /* clean white for best contrast */
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-family: "Segoe UI", sans-serif;
+  color: #333; /* dark text for readability */
+}
+
+.form-container h2 {
+  text-align: center;
+  color: #d35400; /* warm orange heading */
+  margin-bottom: 20px;
+}
+
+.form-container input,
+.form-container textarea,
+.form-container select {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+  background-color: #fdfdfd;
+  color: #333; /* ensure text is visible */
+}
+
+.form-container textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.form-container input[type="file"] {
+  border: none;
+  margin: 10px 0;
+  font-size: 15px;
+  color: #333;
+}
+
+.form-container button {
+  width: 100%;
+  padding: 12px;
+  background-color: #d35400; /* strong orange */
+  color: #fff; /* white text for contrast */
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.form-container button:hover {
+  background-color: #27ae60; /* elegant green hover */
+}
+
+/* Optional: image preview grid */
+.image-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.image-preview img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
