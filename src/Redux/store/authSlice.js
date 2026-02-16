@@ -1,3 +1,4 @@
+// src/Redux/store/authSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -8,17 +9,14 @@ export const loginUser = createAsyncThunk(
   async (newUser, { rejectWithValue }) => {
     try {
       const res = await axios.post(`${backendURL}auth/login`, newUser);
-      console.log(res.data);
       return res.data;
     } catch (error) {
       if (error.response && error.response.data) {
-        console.log(error.response.data);
-
         return rejectWithValue(error.response.data);
       }
       return rejectWithValue("Network error");
     }
-  },
+  }
 );
 
 export const signUpUser = createAsyncThunk(
@@ -26,20 +24,17 @@ export const signUpUser = createAsyncThunk(
   async (newUser, { rejectWithValue }) => {
     try {
       const res = await axios.post(`${backendURL}auth/signup`, newUser);
-      console.log(res.data);
       return res.data;
     } catch (error) {
       if (error.response && error.response.data) {
-        console.log(error.response.data);
-
         return rejectWithValue(error.response.data);
       }
       return rejectWithValue("Network error");
     }
-  },
+  }
 );
 
-const authSlcice = createSlice({
+const authSlice = createSlice({
   name: "auth",
   initialState: {
     user: null,
@@ -51,7 +46,10 @@ const authSlcice = createSlice({
     logout: (state) => {
       state.user = null;
       state.token = null;
+      state.status = "idle";
+      state.error = null;
       localStorage.removeItem("token");
+      localStorage.removeItem("role");
     },
   },
   extraReducers: (builder) => {
@@ -89,5 +87,5 @@ const authSlcice = createSlice({
   },
 });
 
-export const { logout } = authSlcice.actions;
-export default authSlcice.reducer;
+export const { logout } = authSlice.actions;
+export default authSlice.reducer;

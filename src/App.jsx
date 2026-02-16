@@ -17,9 +17,6 @@ import ReportFound from "./page/ReportFound"; // form page
 
 // Admin Pages
 import AdminDashboard from "./admin/AdminDashboard";
-import AdminReports from "./admin/AdminReports";
-import AdminViews from "./admin/AdminViews";
-import AdminUsers from "./admin/AdminUsers";
 import AdminLogin from "./admin/AdminLogin";
 import AdminManageItems from "./admin/AdminManageItems";
 
@@ -61,12 +58,11 @@ function App() {
         {/* Admin Routes */}
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        <Route path="/admin/view-reports" element={<AdminReports />} />
-        <Route path="/admin/views" element={<AdminViews />} />
-        <Route path="/admin/users" element={<AdminUsers />} />
+        
+        
         <Route path="/admin/manage-items" element={<AdminManageItems />} />
-        <Route path="/admin/items/edit/:id" element={<AdminEditItem />} />;
-        <Route path="/admin/claim" element={<AdminClaimedItems />} />;
+        <Route path="/admin/items/edit/:id" element={<AdminEditItem />} />
+        <Route path="/admin/claim" element={<AdminClaimedItems />} />
       </Routes>
 
       {!isAdminRoute && <Footer />}

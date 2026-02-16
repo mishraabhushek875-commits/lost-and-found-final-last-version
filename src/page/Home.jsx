@@ -2,54 +2,85 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getReports } from "../utils/storage";
 
-import "./Home.module.css";
-
 const Home = () => {
   const navigate = useNavigate();
-
   const [latestReports, setLatestReports] = useState([]);
 
   useEffect(() => {
     const reports = getReports();
-
-    // Latest 4 reports
     setLatestReports(reports.slice(0, 4));
   }, []);
 
   return (
-    <>
-      
+    <div
+      className="min-h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center px-6 py-20 relative"
+      style={{
+        backgroundImage: "url('/bg.jpg')", // 👈 apni image ka naam yaha daalo
+      }}
+    >
+      {/* Dark Overlay for better readability */}
+      <div className="absolute inset-0 bg-black/60"></div>
 
-      <div className="page">
-        <center>
-          <h1>LOST AND FOUND MANAGEMENT SYSTEM</h1>
+      {/* Content */}
+      <div className="relative z-10 text-center max-w-4xl w-full text-white">
 
-          <h4>
-            "Every lost thing holds a story — let's bring those stories home again"
-          </h4>
+        {/* Heading */}
+        <h1 className="text-4xl md:text-6xl font-extrabold leading-tight mb-6">
+          LOST AND FOUND MANAGEMENT SYSTEM
+        </h1>
 
-          <button className="btnmain" onClick={() => navigate("/found-item")}>
-            Find Item
+        <p className="text-lg md:text-xl italic mb-12 max-w-2xl mx-auto text-gray-200">
+          "Every lost thing holds a story — let's bring those stories home again"
+        </p>
+
+        {/* Buttons */}
+        <div className="flex flex-col sm:flex-row justify-center gap-6 mb-16">
+          
+          <button
+            onClick={() => navigate("/found-item")}
+            className="px-10 py-3 rounded-xl bg-blue-600 text-white font-semibold shadow-lg hover:bg-blue-700 transition duration-300"
+          >
+            Found Item
           </button>
-           
-           <button className="btnmain" onClick={() => navigate("/lost-item")}>
+
+          <button
+            onClick={() => navigate("/lost-item")}
+            className="px-10 py-3 rounded-xl bg-indigo-600 text-white font-semibold shadow-lg hover:bg-indigo-700 transition duration-300"
+          >
             Lost Item
           </button>
 
-
-
-
-          <h2 style={{ marginTop: "40px" }}>Reports Summary</h2>
-
-        <div className="blocks">
-          <p>Total Lost Reports: </p>
-          <p>Total Found Reports: </p>
         </div>
 
-          
-        </center>
+        {/* Reports Summary */}
+        <h2 className="text-2xl md:text-3xl font-bold mb-8">
+          Reports Summary
+        </h2>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+
+          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8">
+            <p className="text-lg font-semibold">
+              Total Lost Reports
+            </p>
+            <p className="text-4xl font-extrabold mt-4">
+              --
+            </p>
+          </div>
+
+          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8">
+            <p className="text-lg font-semibold">
+              Total Found Reports
+            </p>
+            <p className="text-4xl font-extrabold mt-4">
+              --
+            </p>
+          </div>
+
+        </div>
+
       </div>
-    </>
+    </div>
   );
 };
 
