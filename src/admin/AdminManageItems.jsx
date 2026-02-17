@@ -18,20 +18,28 @@ import { toast } from "sonner";
 const AdminManageItems = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { items, error, loading } = useSelector((state) => state.items);
+
+  // ✅ Fix 2: use fetchLoading (matches slice), aliased as `loading`
+  const { items, pagination, error, fetchLoading: loading } = useSelector(
+    (state) => state.items
+  );
 
   useEffect(() => {
     dispatch(fetchItems({ page: 1 }));
   }, [dispatch]);
 
-
   const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this item? This action cannot be undone.")) {
+    if (
+      window.confirm(
+        "Are you sure you want to delete this item? This action cannot be undone."
+      )
+    ) {
       dispatch(deleteItem(id))
         .unwrap()
         .then(() => {
           toast.success("Item deleted successfully");
-          dispatch(fetchItems({ page: data.pagination.page }));
+          // ✅ Fix 1: use `pagination` from Redux state instead of undefined `data`
+          dispatch(fetchItems({ page: pagination.page }));
         })
         .catch((err) => {
           toast.error("Failed to delete item");
@@ -130,7 +138,9 @@ const AdminManageItems = () => {
                         <div className="flex flex-col items-center">
                           <FaBoxes className="text-4xl text-slate-500 mb-3" />
                           <p className="text-lg font-medium">No items found</p>
-                          <p className="text-sm">There are no items to manage yet.</p>
+                          <p className="text-sm">
+                            There are no items to manage yet.
+                          </p>
                         </div>
                       </td>
                     </tr>
@@ -192,13 +202,13 @@ const AdminManageItems = () => {
         )}
 
         {/* Pagination */}
-        {data?.pagination && items.length > 0 && (
+        {pagination && items.length > 0 && (
           <div className="flex flex-col sm:flex-row justify-center items-center gap-6 mt-8 px-4">
             <button
-              disabled={data.pagination.page === 1}
+              disabled={pagination.page === 1}
               className="px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-600 disabled:opacity-50 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95 flex items-center gap-2 shadow-md"
               onClick={() =>
-                dispatch(fetchItems({ page: data.pagination.page - 1 }))
+                dispatch(fetchItems({ page: pagination.page - 1 }))
               }
             >
               <FaChevronLeft size={16} />
@@ -208,19 +218,20 @@ const AdminManageItems = () => {
             <div className="text-center">
               <p className="text-white text-lg font-semibold">
                 Page{" "}
-                <span className="text-blue-400">{data.pagination.page}</span> of{" "}
-                <span className="text-blue-400">{data.pagination.pages}</span>
+                <span className="text-blue-400">{pagination.page}</span> of{" "}
+                <span className="text-blue-400">{pagination.pages}</span>
               </p>
               <p className="text-slate-400 text-sm">
                 Showing {items.length} items
               </p>
             </div>
 
+            {/* ✅ Fix 3: disabled when hasNext is FALSE (no more pages) */}
             <button
-              disabled={!data.pagination.hasNext}
+              disabled={!pagination.hasNext}
               className="px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-600 disabled:opacity-50 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95 flex items-center gap-2 shadow-md"
               onClick={() =>
-                dispatch(fetchItems({ page: data.pagination.page + 1 }))
+                dispatch(fetchItems({ page: pagination.page + 1 }))
               }
             >
               <span>Next</span>
