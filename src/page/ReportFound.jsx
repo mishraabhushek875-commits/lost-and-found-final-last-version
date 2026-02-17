@@ -74,6 +74,7 @@ const ReportFound = () => {
     if (error) {
       toast.error(error);
       dispatch(resetItemState());
+      navigate("/login");
     }
   }, [createSuccess, error, navigate, dispatch]);
 
@@ -82,7 +83,7 @@ const ReportFound = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 to-blue-100 flex items-center justify-center px-6 py-20">
       <div className="bg-white w-full max-w-lg rounded-3xl shadow-2xl p-10">
-        
+
         <h2 className="text-3xl font-extrabold text-gray-900 text-center mb-8">
           Report Found Item
         </h2>

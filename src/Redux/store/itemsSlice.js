@@ -10,6 +10,7 @@ export const fetchItems = createAsyncThunk(
   async ({ page = 1 }, { rejectWithValue }) => {
     try {
       const res = await axios.get(`${backendURL}items?page=${page}`);
+      console.log(res.data);
       return res.data;
     } catch (error) {
       return rejectWithValue(
@@ -43,6 +44,11 @@ export const createItem = createAsyncThunk(
     try {
       const token = localStorage.getItem("token");
 
+      // ✅ Reject early if no token
+      if (!token) {
+        return rejectWithValue("You must be logged in to report a found item.");
+      }
+
       const res = await axios.post(
         `${backendURL}items`,
         formDataToSend,
@@ -55,9 +61,7 @@ export const createItem = createAsyncThunk(
 
       return res.data;
     } catch (error) {
-      return rejectWithValue(
-        error.response?.data || "Network error"
-      );
+      return rejectWithValue(error.response?.data || "Network error");
     }
   }
 );

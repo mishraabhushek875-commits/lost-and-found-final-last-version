@@ -8,13 +8,13 @@ import { toast } from "sonner";
 const FoundItems = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { data, loading, error } = useSelector((state) => state.items);
+  const { items, pagination, loading, error } = useSelector((state) => state.items);
 
-  const items = data?.items || [];
-  const pagination = data?.pagination || { page: 1, pages: 1, hasNext: false };
 
   useEffect(() => {
     dispatch(fetchItems({ page: 1 }));
+    console.log(items);
+
   }, [dispatch]);
 
   const handleNext = () => {
