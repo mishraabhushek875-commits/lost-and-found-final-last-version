@@ -18,13 +18,12 @@ import { toast } from "sonner";
 const AdminManageItems = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { data, error, loading } = useSelector((state) => state.items);
+  const { items, error, loading } = useSelector((state) => state.items);
 
   useEffect(() => {
     dispatch(fetchItems({ page: 1 }));
   }, [dispatch]);
 
-  const items = data?.items || [];
 
   const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this item? This action cannot be undone.")) {
