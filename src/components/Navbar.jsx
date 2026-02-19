@@ -46,9 +46,10 @@ const Navbar = () => {
               alt="Back2u Logo"
               className="w-10 h-10 rounded-full object-cover"
             />
-            <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+            <Link to="/" ><h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
               Back2u
-            </h1>
+            </h1></Link>
+            
           </div>
 
           {/* Desktop Menu */}
