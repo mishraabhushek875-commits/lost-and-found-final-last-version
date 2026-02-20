@@ -34,7 +34,7 @@ const Home = () => {
         </p>
 
         {/* Buttons */}
-        <div className="flex flex-col sm:flex-row justify-center gap-6 mb-16">
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-6 mb-16">
           
           <button
             onClick={() => navigate("/found-item")}
