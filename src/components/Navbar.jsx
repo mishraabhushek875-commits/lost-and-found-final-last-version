@@ -88,7 +88,7 @@ const Navbar = () => {
           </div>
 
           {/* Mobile Hamburger */}
-          <button onClick={toggleMenu} className="md:hidden text-2xl text-white">
+          <button onClick={toggleMenu} className="md:hidden text-2xl text-white w-[30px] h-[30px] flex items-center justify-center">
             {isOpen ? <FaTimes /> : <FaBars />}
           </button>
         </div>

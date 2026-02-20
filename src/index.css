@@ -119,7 +119,7 @@ button:hover {
   }
 
   button {
-    width: 40%;
+    width: 100%;
     padding: 10px;
     font-size: 0.9rem;
   }

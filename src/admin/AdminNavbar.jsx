@@ -60,6 +60,15 @@ const AdminNavbar = () => {
                 Manage Items
               </Link>
             </li>
+            <li>
+              <Link
+                to="/admin/claim"
+                className="flex items-center gap-2 text-gray-300 hover:text-blue-400 transition duration-300 font-medium group"
+              >
+                <FaBoxes className="group-hover:scale-110 transition-transform" />
+                Claims
+              </Link>
+            </li>
           </ul>
 
           {/* Desktop Buttons */}
