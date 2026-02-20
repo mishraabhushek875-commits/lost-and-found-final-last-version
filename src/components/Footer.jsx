@@ -72,7 +72,7 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <a href="#" className="text-slate-300 hover:text-white transition duration-300">
+                <a href="/contact" className="text-slate-300 hover:text-white transition duration-300">
                   Report an Issue
                 </a>
               </li>

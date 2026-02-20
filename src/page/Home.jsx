@@ -38,17 +38,12 @@ const Home = () => {
           
           <button
             onClick={() => navigate("/found-item")}
-            className="px-10 py-3 rounded-xl bg-blue-600 text-white font-semibold shadow-lg hover:bg-blue-700 transition duration-300"
+            className="px-10 py-3 rounded-xl bg-blue-600 text-white text-3xl font-semibold shadow-lg hover:bg-blue-700 transition duration-300"
           >
             Found Item
           </button>
 
-          <button
-            onClick={() => navigate("/lost-item")}
-            className="px-10 py-3 rounded-xl bg-indigo-600 text-white font-semibold shadow-lg hover:bg-indigo-700 transition duration-300"
-          >
-            Lost Item
-          </button>
+          
 
         </div>
 
@@ -61,8 +56,9 @@ const Home = () => {
 
           <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8">
             <p className="text-lg font-semibold">
-              Total Lost Reports
-            </p>
+  All Lost Reports 
+</p>
+
             <p className="text-4xl font-extrabold mt-4">
               --
             </p>
@@ -70,8 +66,9 @@ const Home = () => {
 
           <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8">
             <p className="text-lg font-semibold">
-              Total Found Reports
-            </p>
+  All  Found Reports 
+</p>
+
             <p className="text-4xl font-extrabold mt-4">
               --
             </p>
