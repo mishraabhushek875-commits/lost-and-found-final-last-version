@@ -120,156 +120,268 @@ const AdminClaimedItems = () => {
           </div>
         )}
 
-        {/* Table */}
+        {/* Desktop Table - Hidden on mobile */}
         {!loading && !error && (
-          <div className="bg-slate-700 rounded-2xl shadow-2xl overflow-hidden">
-            {/* Table Container */}
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                {/* Table Head */}
-                <thead>
-                  <tr className="bg-gradient-to-r from-slate-600 to-slate-700 text-left border-b border-slate-600">
-                    <th className="px-6 py-4 text-sm font-bold text-slate-300 uppercase tracking-wider">
-                      Claim ID
-                    </th>
-                    <th className="px-6 py-4 text-sm font-bold text-slate-300 uppercase tracking-wider">
-                      Item
-                    </th>
-                    <th className="px-6 py-4 text-sm font-bold text-slate-300 uppercase tracking-wider">
-                      Claimed By
-                    </th>
-                    <th className="px-6 py-4 text-sm font-bold text-slate-300 uppercase tracking-wider">
-                      Email
-                    </th>
-                    <th className="px-6 py-4 text-sm font-bold text-slate-300 uppercase tracking-wider">
-                      Status
-                    </th>
-                    <th className="px-6 py-4 text-sm font-bold text-slate-300 uppercase tracking-wider">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-
-                {/* Table Body */}
-                <tbody className="divide-y divide-slate-600">
-                  {claims.length === 0 ? (
-                    <tr>
-                      <td
-                        colSpan="6"
-                        className="px-6 py-12 text-center text-slate-400"
-                      >
-                        <div className="flex flex-col items-center">
-                          <FaBoxes className="text-4xl text-slate-500 mb-3" />
-                          <p className="text-lg font-medium">No pending claims</p>
-                          <p className="text-sm">
-                            There are no claims to review at this time.
-                          </p>
-                        </div>
-                      </td>
+          <>
+            {/* Desktop Table View */}
+            <div className="hidden md:block bg-slate-700 rounded-2xl shadow-2xl overflow-hidden">
+              {/* Table Container */}
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  {/* Table Head */}
+                  <thead>
+                    <tr className="bg-gradient-to-r from-slate-600 to-slate-700 text-left border-b border-slate-600">
+                      <th className="px-6 py-4 text-sm font-bold text-slate-300 uppercase tracking-wider">
+                        Claim ID
+                      </th>
+                      <th className="px-6 py-4 text-sm font-bold text-slate-300 uppercase tracking-wider">
+                        Item
+                      </th>
+                      <th className="px-6 py-4 text-sm font-bold text-slate-300 uppercase tracking-wider">
+                        Claimed By
+                      </th>
+                      <th className="px-6 py-4 text-sm font-bold text-slate-300 uppercase tracking-wider">
+                        Email
+                      </th>
+                      <th className="px-6 py-4 text-sm font-bold text-slate-300 uppercase tracking-wider">
+                        Status
+                      </th>
+                      <th className="px-6 py-4 text-sm font-bold text-slate-300 uppercase tracking-wider">
+                        Actions
+                      </th>
                     </tr>
-                  ) : (
-                    claims.map((claim) => (
-                      <tr
-                        key={claim._id}
-                        className="hover:bg-slate-600/50 transition-all duration-200 group"
-                      >
-                        <td className="px-6 py-4 text-sm text-slate-300 font-mono truncate">
-                          {claim._id?.substring(0, 8)}...
-                        </td>
-                        <td className="px-6 py-4 text-white font-semibold max-w-xs truncate">
-                          {claim.itemId?.title || "N/A"}
-                        </td>
-                        <td className="px-6 py-4 text-slate-300 font-medium">
-                          {claim.claimedBy?.name || "Unknown User"}
-                        </td>
-                        <td className="px-6 py-4 text-slate-300 truncate">
-                          {claim.claimedBy?.email || "N/A"}
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="flex items-center gap-2">
-                            {getStatusIcon(claim.status)}
-                            <span
-                              className={`px-3 py-1 rounded-full text-sm font-bold capitalize ${getStatusColor(
-                                claim.status
-                              )}`}
-                            >
-                              {claim.status || "Pending"}
-                            </span>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="flex items-center gap-2">
-                            {(!claim.status || claim.status?.toLowerCase() === "pending") && (
-                              <>
-                                <button
-                                  className="group/btn px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95 flex items-center gap-2 shadow-md"
-                                  onClick={() => handleApprove(claim._id)}
-                                  title="Approve this claim"
-                                >
-                                  <FaCheckCircle size={16} />
-                                  <span className="hidden sm:inline">Approve</span>
-                                </button>
-                                <button
-                                  className="group/btn px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95 flex items-center gap-2 shadow-md"
-                                  onClick={() => handleReject(claim._id)}
-                                  title="Reject this claim"
-                                >
-                                  <FaTimesCircle size={16} />
-                                  <span className="hidden sm:inline">Reject</span>
-                                </button>
-                              </>
-                            )}
-                            {claim.status && claim.status?.toLowerCase() !== "pending" && (
-                              <span className="text-slate-400 text-sm italic">
-                                {claim.status}
-                              </span>
-                            )}
+                  </thead>
+
+                  {/* Table Body */}
+                  <tbody className="divide-y divide-slate-600">
+                    {claims.length === 0 ? (
+                      <tr>
+                        <td
+                          colSpan="6"
+                          className="px-6 py-12 text-center text-slate-400"
+                        >
+                          <div className="flex flex-col items-center">
+                            <FaBoxes className="text-4xl text-slate-500 mb-3" />
+                            <p className="text-lg font-medium">No pending claims</p>
+                            <p className="text-sm">
+                              There are no claims to review at this time.
+                            </p>
                           </div>
                         </td>
                       </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
+                    ) : (
+                      claims.map((claim) => (
+                        <tr
+                          key={claim._id}
+                          className="hover:bg-slate-600/50 transition-all duration-200 group"
+                        >
+                          <td className="px-6 py-4 text-sm text-slate-300 font-mono truncate">
+                            {claim._id?.substring(0, 8)}...
+                          </td>
+                          <td className="px-6 py-4 text-white font-semibold max-w-xs truncate">
+                            {claim.itemId?.title || "N/A"}
+                          </td>
+                          <td className="px-6 py-4 text-slate-300 font-medium">
+                            {claim.claimedBy?.name || "Unknown User"}
+                          </td>
+                          <td className="px-6 py-4 text-slate-300 truncate">
+                            {claim.claimedBy?.email || "N/A"}
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="flex items-center gap-2">
+                              {getStatusIcon(claim.status)}
+                              <span
+                                className={`px-3 py-1 rounded-full text-sm font-bold capitalize ${getStatusColor(
+                                  claim.status
+                                )}`}
+                              >
+                                {claim.status || "Pending"}
+                              </span>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="flex items-center gap-2">
+                              {(!claim.status || claim.status?.toLowerCase() === "pending") && (
+                                <>
+                                  <button
+                                    className="group/btn px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95 flex items-center gap-2 shadow-md"
+                                    onClick={() => handleApprove(claim._id)}
+                                    title="Approve this claim"
+                                  >
+                                    <FaCheckCircle size={16} />
+                                    <span>Approve</span>
+                                  </button>
+                                  <button
+                                    className="group/btn px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95 flex items-center gap-2 shadow-md"
+                                    onClick={() => handleReject(claim._id)}
+                                    title="Reject this claim"
+                                  >
+                                    <FaTimesCircle size={16} />
+                                    <span>Reject</span>
+                                  </button>
+                                </>
+                              )}
+                              {claim.status && claim.status?.toLowerCase() !== "pending" && (
+                                <span className="text-slate-400 text-sm italic">
+                                  {claim.status}
+                                </span>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
+
+            {/* Mobile Card View - Visible only on mobile */}
+            <div className="md:hidden space-y-4">
+              {claims.length === 0 ? (
+                <div className="bg-slate-700 rounded-2xl p-8 text-center">
+                  <FaBoxes className="text-4xl text-slate-500 mb-3 mx-auto" />
+                  <p className="text-lg font-medium text-white">No pending claims</p>
+                  <p className="text-sm text-slate-400">
+                    There are no claims to review at this time.
+                  </p>
+                </div>
+              ) : (
+                claims.map((claim) => (
+                  <div
+                    key={claim._id}
+                    className="bg-slate-700 rounded-xl shadow-lg p-4 sm:p-6 border border-slate-600 hover:border-slate-500 transition-all duration-200"
+                  >
+                    {/* Claim ID */}
+                    <div className="mb-4 pb-4 border-b border-slate-600">
+                      <p className="text-xs text-slate-400 uppercase tracking-wider font-bold">
+                        Claim ID
+                      </p>
+                      <p className="text-sm text-slate-300 font-mono">
+                        {claim._id?.substring(0, 12)}...
+                      </p>
+                    </div>
+
+                    {/* Item Details */}
+                    <div className="grid grid-cols-1 gap-4 mb-6">
+                      <div>
+                        <p className="text-xs text-slate-400 uppercase tracking-wider font-bold mb-1">
+                          Item
+                        </p>
+                        <p className="text-white font-semibold text-sm">
+                          {claim.itemId?.title || "N/A"}
+                        </p>
+                      </div>
+
+                      <div>
+                        <p className="text-xs text-slate-400 uppercase tracking-wider font-bold mb-1">
+                          Claimed By
+                        </p>
+                        <p className="text-slate-300 text-sm font-medium">
+                          {claim.claimedBy?.name || "Unknown User"}
+                        </p>
+                      </div>
+
+                      <div>
+                        <p className="text-xs text-slate-400 uppercase tracking-wider font-bold mb-1">
+                          Email
+                        </p>
+                        <p className="text-slate-300 text-sm break-all">
+                          {claim.claimedBy?.email || "N/A"}
+                        </p>
+                      </div>
+
+                      <div>
+                        <p className="text-xs text-slate-400 uppercase tracking-wider font-bold mb-2">
+                          Status
+                        </p>
+                        <div className="flex items-center gap-2">
+                          {getStatusIcon(claim.status)}
+                          <span
+                            className={`px-3 py-1 rounded-full text-xs font-bold capitalize ${getStatusColor(
+                              claim.status
+                            )}`}
+                          >
+                            {claim.status || "Pending"}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex gap-3 pt-4 border-t border-slate-600">
+                      {(!claim.status || claim.status?.toLowerCase() === "pending") && (
+                        <>
+                          <button
+                            className="flex-1 px-4 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-all duration-300 transform active:scale-95 flex items-center justify-center gap-2 shadow-md"
+                            onClick={() => handleApprove(claim._id)}
+                            title="Approve this claim"
+                          >
+                            <FaCheckCircle size={16} />
+                            <span>Approve</span>
+                          </button>
+                          <button
+                            className="flex-1 px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-all duration-300 transform active:scale-95 flex items-center justify-center gap-2 shadow-md"
+                            onClick={() => handleReject(claim._id)}
+                            title="Reject this claim"
+                          >
+                            <FaTimesCircle size={16} />
+                            <span>Reject</span>
+                          </button>
+                        </>
+                      )}
+                      {claim.status && claim.status?.toLowerCase() !== "pending" && (
+                        <div className="w-full py-3 text-slate-400 text-sm italic text-center">
+                          Already {claim.status}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </>
         )}
 
         {/* Pagination */}
         {pagination?.pages && claims.length > 0 && (
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-6 mt-8 px-4">
-            <button
-              disabled={pagination.page === 1}
-              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-600 disabled:opacity-50 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95 flex items-center gap-2 shadow-md"
-              onClick={() => {
-                // dispatch(claimedItems({ page: pagination.page - 1 }));
-              }}
-            >
-              <FaChevronLeft size={16} />
-              <span>Previous</span>
-            </button>
-
-            <div className="text-center">
-              <p className="text-white text-lg font-semibold">
+          <div className="flex flex-col gap-4 mt-8 px-2 sm:px-4">
+            {/* Page Info */}
+            <div className="text-center bg-slate-700 rounded-lg p-3 sm:p-4">
+              <p className="text-white text-base sm:text-lg font-semibold">
                 Page{" "}
                 <span className="text-blue-400">{pagination.page}</span> of{" "}
                 <span className="text-blue-400">{pagination.pages}</span>
               </p>
-              <p className="text-slate-400 text-sm">
+              <p className="text-slate-400 text-xs sm:text-sm">
                 Showing {claims.length} claims
               </p>
             </div>
 
-            <button
-              disabled={!pagination.hasNext}
-              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-600 disabled:opacity-50 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95 flex items-center gap-2 shadow-md"
-              onClick={() => {
-                // dispatch(claimedItems({ page: pagination.page + 1 }));
-              }}
-            >
-              <span>Next</span>
-              <FaChevronRight size={16} />
-            </button>
+            {/* Pagination Buttons */}
+            <div className="flex gap-2 sm:gap-4 justify-center">
+              <button
+                disabled={pagination.page === 1}
+                className="flex-1 sm:flex-none px-4 sm:px-6 py-2 sm:py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-600 disabled:opacity-50 text-white font-semibold rounded-lg transition-all duration-300 transform active:scale-95 flex items-center justify-center gap-2 shadow-md text-sm sm:text-base"
+                onClick={() => {
+                  // dispatch(claimedItems({ page: pagination.page - 1 }));
+                }}
+              >
+                <FaChevronLeft size={14} className="sm:w-4 sm:h-4" />
+                <span>Prev</span>
+              </button>
+
+              <button
+                disabled={!pagination.hasNext}
+                className="flex-1 sm:flex-none px-4 sm:px-6 py-2 sm:py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-600 disabled:opacity-50 text-white font-semibold rounded-lg transition-all duration-300 transform active:scale-95 flex items-center justify-center gap-2 shadow-md text-sm sm:text-base"
+                onClick={() => {
+                  // dispatch(claimedItems({ page: pagination.page + 1 }));
+                }}
+              >
+                <span>Next</span>
+                <FaChevronRight size={14} className="sm:w-4 sm:h-4" />
+              </button>
+            </div>
           </div>
         )}
       </div>
