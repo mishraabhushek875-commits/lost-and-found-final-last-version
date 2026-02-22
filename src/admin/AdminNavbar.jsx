@@ -114,6 +114,15 @@ const AdminNavbar = () => {
               <FaBoxes />
               Manage Items
             </Link>
+            
+              <Link
+                to="/admin/claim"
+                className="flex items-center gap-3 px-4 py-3 text-gray-300  hover:bg-slate-700 hover:text-blue-400 rounded-lg transition duration-300 font-medium "
+              >
+                <FaBoxes className="group-hover:scale-110 transition-transform" />
+                Claims
+              </Link>
+            
 
             {/* Divider */}
             <div className="border-t border-slate-700 my-3"></div>
