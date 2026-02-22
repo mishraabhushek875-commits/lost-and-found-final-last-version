@@ -100,143 +100,237 @@ const AdminManageItems = () => {
           </div>
         )}
 
-        {/* Table */}
+        {/* Desktop Table - Hidden on mobile */}
         {!loading && !error && (
-          <div className="bg-slate-700 rounded-2xl shadow-2xl overflow-hidden">
-            {/* Table Container */}
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                {/* Table Head */}
-                <thead>
-                  <tr className="bg-gradient-to-r from-slate-600 to-slate-700 text-left border-b border-slate-600">
-                    <th className="px-6 py-4 text-sm font-bold text-slate-300 uppercase tracking-wider">
-                      Item ID
-                    </th>
-                    <th className="px-6 py-4 text-sm font-bold text-slate-300 uppercase tracking-wider">
-                      Name
-                    </th>
-                    <th className="px-6 py-4 text-sm font-bold text-slate-300 uppercase tracking-wider">
-                      Category
-                    </th>
-                    <th className="px-6 py-4 text-sm font-bold text-slate-300 uppercase tracking-wider">
-                      Status
-                    </th>
-                    <th className="px-6 py-4 text-sm font-bold text-slate-300 uppercase tracking-wider">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-
-                {/* Table Body */}
-                <tbody className="divide-y divide-slate-600">
-                  {items.length === 0 ? (
-                    <tr>
-                      <td
-                        colSpan="5"
-                        className="px-6 py-12 text-center text-slate-400"
-                      >
-                        <div className="flex flex-col items-center">
-                          <FaBoxes className="text-4xl text-slate-500 mb-3" />
-                          <p className="text-lg font-medium">No items found</p>
-                          <p className="text-sm">
-                            There are no items to manage yet.
-                          </p>
-                        </div>
-                      </td>
+          <>
+            {/* Desktop Table View */}
+            <div className="hidden md:block bg-slate-700 rounded-2xl shadow-2xl overflow-hidden">
+              {/* Table Container */}
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  {/* Table Head */}
+                  <thead>
+                    <tr className="bg-gradient-to-r from-slate-600 to-slate-700 text-left border-b border-slate-600">
+                      <th className="px-6 py-4 text-sm font-bold text-slate-300 uppercase tracking-wider">
+                        Item ID
+                      </th>
+                      <th className="px-6 py-4 text-sm font-bold text-slate-300 uppercase tracking-wider">
+                        Name
+                      </th>
+                      <th className="px-6 py-4 text-sm font-bold text-slate-300 uppercase tracking-wider">
+                        Category
+                      </th>
+                      <th className="px-6 py-4 text-sm font-bold text-slate-300 uppercase tracking-wider">
+                        Status
+                      </th>
+                      <th className="px-6 py-4 text-sm font-bold text-slate-300 uppercase tracking-wider">
+                        Actions
+                      </th>
                     </tr>
-                  ) : (
-                    items.map((item) => (
-                      <tr
-                        key={item._id}
-                        className="hover:bg-slate-600/50 transition-all duration-200 group"
-                      >
-                        <td className="px-6 py-4 text-sm text-slate-300 font-mono truncate">
-                          {item._id.substring(0, 8)}...
+                  </thead>
+
+                  {/* Table Body */}
+                  <tbody className="divide-y divide-slate-600">
+                    {items.length === 0 ? (
+                      <tr>
+                        <td
+                          colSpan="5"
+                          className="px-6 py-12 text-center text-slate-400"
+                        >
+                          <div className="flex flex-col items-center">
+                            <FaBoxes className="text-4xl text-slate-500 mb-3" />
+                            <p className="text-lg font-medium">No items found</p>
+                            <p className="text-sm">
+                              There are no items to manage yet.
+                            </p>
+                          </div>
                         </td>
-                        <td className="px-6 py-4 text-white font-semibold max-w-xs truncate">
+                      </tr>
+                    ) : (
+                      items.map((item) => (
+                        <tr
+                          key={item._id}
+                          className="hover:bg-slate-600/50 transition-all duration-200 group"
+                        >
+                          <td className="px-6 py-4 text-sm text-slate-300 font-mono truncate">
+                            {item._id.substring(0, 8)}...
+                          </td>
+                          <td className="px-6 py-4 text-white font-semibold max-w-xs truncate">
+                            {item.title}
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-full text-sm font-medium capitalize border border-blue-500/30">
+                              {item.category}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span
+                              className={`px-3 py-1 rounded-full text-sm font-bold capitalize ${getStatusColor(
+                                item.status
+                              )}`}
+                            >
+                              {item.status}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="flex items-center gap-2">
+                              <button
+                                className="group/btn px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95 flex items-center gap-2 shadow-md"
+                                onClick={() =>
+                                  navigate(`/admin/items/edit/${item._id}`)
+                                }
+                                title="Edit this item"
+                              >
+                                <FaEdit size={16} />
+                                <span>Edit</span>
+                              </button>
+                              <button
+                                className="group/btn px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95 flex items-center gap-2 shadow-md"
+                                onClick={() => handleDelete(item._id)}
+                                title="Delete this item"
+                              >
+                                <FaTrashAlt size={16} />
+                                <span>Delete</span>
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Mobile Card View - Visible only on mobile */}
+            <div className="md:hidden space-y-4">
+              {items.length === 0 ? (
+                <div className="bg-slate-700 rounded-2xl p-8 text-center">
+                  <FaBoxes className="text-4xl text-slate-500 mb-3 mx-auto" />
+                  <p className="text-lg font-medium text-white">No items found</p>
+                  <p className="text-sm text-slate-400">
+                    There are no items to manage yet.
+                  </p>
+                </div>
+              ) : (
+                items.map((item) => (
+                  <div
+                    key={item._id}
+                    className="bg-slate-700 rounded-xl shadow-lg p-4 sm:p-6 border border-slate-600 hover:border-slate-500 transition-all duration-200"
+                  >
+                    {/* Item ID */}
+                    <div className="mb-4 pb-4 border-b border-slate-600">
+                      <p className="text-xs text-slate-400 uppercase tracking-wider font-bold">
+                        Item ID
+                      </p>
+                      <p className="text-sm text-slate-300 font-mono">
+                        {item._id.substring(0, 12)}...
+                      </p>
+                    </div>
+
+                    {/* Item Details */}
+                    <div className="grid grid-cols-1 gap-4 mb-6">
+                      <div>
+                        <p className="text-xs text-slate-400 uppercase tracking-wider font-bold mb-1">
+                          Name
+                        </p>
+                        <p className="text-white font-semibold text-sm">
                           {item.title}
-                        </td>
-                        <td className="px-6 py-4">
-                          <span className="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-full text-sm font-medium capitalize border border-blue-500/30">
+                        </p>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <p className="text-xs text-slate-400 uppercase tracking-wider font-bold mb-1">
+                            Category
+                          </p>
+                          <span className="px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs font-medium capitalize border border-blue-500/30 inline-block">
                             {item.category}
                           </span>
-                        </td>
-                        <td className="px-6 py-4">
+                        </div>
+
+                        <div>
+                          <p className="text-xs text-slate-400 uppercase tracking-wider font-bold mb-1">
+                            Status
+                          </p>
                           <span
-                            className={`px-3 py-1 rounded-full text-sm font-bold capitalize ${getStatusColor(
+                            className={`px-2 py-1 rounded text-xs font-bold capitalize inline-block ${getStatusColor(
                               item.status
                             )}`}
                           >
                             {item.status}
                           </span>
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="flex items-center gap-2">
-                            <button
-                              className="group/btn px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95 flex items-center gap-2 shadow-md"
-                              onClick={() =>
-                                navigate(`/admin/items/edit/${item._id}`)
-                              }
-                              title="Edit this item"
-                            >
-                              <FaEdit size={16} />
-                              <span className="hidden sm:inline">Edit</span>
-                            </button>
-                            <button
-                              className="group/btn px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95 flex items-center gap-2 shadow-md"
-                              onClick={() => handleDelete(item._id)}
-                              title="Delete this item"
-                            >
-                              <FaTrashAlt size={16} />
-                              <span className="hidden sm:inline">Delete</span>
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex gap-3 pt-4 border-t border-slate-600">
+                      <button
+                        className="flex-1 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-all duration-300 transform active:scale-95 flex items-center justify-center gap-2 shadow-md text-sm"
+                        onClick={() =>
+                          navigate(`/admin/items/edit/${item._id}`)
+                        }
+                        title="Edit this item"
+                      >
+                        <FaEdit size={16} />
+                        <span>Edit</span>
+                      </button>
+                      <button
+                        className="flex-1 px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-all duration-300 transform active:scale-95 flex items-center justify-center gap-2 shadow-md text-sm"
+                        onClick={() => handleDelete(item._id)}
+                        title="Delete this item"
+                      >
+                        <FaTrashAlt size={16} />
+                        <span>Delete</span>
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
-          </div>
+          </>
         )}
 
         {/* Pagination */}
         {pagination && items.length > 0 && (
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-6 mt-8 px-4">
-            <button
-              disabled={pagination.page === 1}
-              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-600 disabled:opacity-50 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95 flex items-center gap-2 shadow-md"
-              onClick={() =>
-                dispatch(fetchItems({ page: pagination.page - 1 }))
-              }
-            >
-              <FaChevronLeft size={16} />
-              <span>Previous</span>
-            </button>
-
-            <div className="text-center">
-              <p className="text-white text-lg font-semibold">
+          <div className="flex flex-col gap-4 mt-8 px-2 sm:px-4">
+            {/* Page Info */}
+            <div className="text-center bg-slate-700 rounded-lg p-3 sm:p-4">
+              <p className="text-white text-base sm:text-lg font-semibold">
                 Page{" "}
                 <span className="text-blue-400">{pagination.page}</span> of{" "}
                 <span className="text-blue-400">{pagination.pages}</span>
               </p>
-              <p className="text-slate-400 text-sm">
+              <p className="text-slate-400 text-xs sm:text-sm">
                 Showing {items.length} items
               </p>
             </div>
 
-            {/* ✅ Fix 3: disabled when hasNext is FALSE (no more pages) */}
-            <button
-              disabled={!pagination.hasNext}
-              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-600 disabled:opacity-50 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95 flex items-center gap-2 shadow-md"
-              onClick={() =>
-                dispatch(fetchItems({ page: pagination.page + 1 }))
-              }
-            >
-              <span>Next</span>
-              <FaChevronRight size={16} />
-            </button>
+            {/* Pagination Buttons */}
+            <div className="flex gap-2 sm:gap-4 justify-center">
+              <button
+                disabled={pagination.page === 1}
+                className="flex-1 sm:flex-none px-4 sm:px-6 py-2 sm:py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-600 disabled:opacity-50 text-white font-semibold rounded-lg transition-all duration-300 transform active:scale-95 flex items-center justify-center gap-2 shadow-md text-sm sm:text-base"
+                onClick={() =>
+                  dispatch(fetchItems({ page: pagination.page - 1 }))
+                }
+              >
+                <FaChevronLeft size={14} className="sm:w-4 sm:h-4" />
+                <span>Prev</span>
+              </button>
+
+              <button
+                disabled={!pagination.hasNext}
+                className="flex-1 sm:flex-none px-4 sm:px-6 py-2 sm:py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-600 disabled:opacity-50 text-white font-semibold rounded-lg transition-all duration-300 transform active:scale-95 flex items-center justify-center gap-2 shadow-md text-sm sm:text-base"
+                onClick={() =>
+                  dispatch(fetchItems({ page: pagination.page + 1 }))
+                }
+              >
+                <span>Next</span>
+                <FaChevronRight size={14} className="sm:w-4 sm:h-4" />
+              </button>
+            </div>
           </div>
         )}
       </div>
