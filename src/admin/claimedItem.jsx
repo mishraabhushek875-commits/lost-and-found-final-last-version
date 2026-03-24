@@ -119,8 +119,8 @@ const AdminClaimedItems = () => {
               ) : (
                 claims.map((claim) => (
                   <tr key={claim._id} className="border-t border-slate-700">
-                    <td className="p-3">{claim.claimedBy?.studentId || "N/A"}</td>
-                    <td className="p-3">{claim.claimedBy?.phone || "N/A"}</td>
+                    <td className="p-3">{claim.itemId?.UserId || "N/A"}</td>
+                    <td className="p-3">{claim.itemId?.phoneNo || "N/A"}</td>
                     <td className="p-3">{claim.itemId?.title}</td>
                     <td className="p-3">{claim.claimedBy?.name}</td>
                     <td className="p-3 break-words">{claim.claimedBy?.email}</td>
@@ -162,8 +162,8 @@ const AdminClaimedItems = () => {
         <div className="md:hidden space-y-4">
           {claims.map((claim) => (
             <div key={claim._id} className="bg-slate-800 p-4 rounded-lg shadow space-y-1">
-              <p className="break-words"><b>Student ID:</b> {claim.claimedBy?.studentId || "N/A"}</p>
-              <p className="break-words"><b>Number:</b> {claim.claimedBy?.phone || "N/A"}</p>
+              <p className="break-words"><b>Student ID:</b> {claim.itemId?.UserId || "N/A"}</p>
+              <p className="break-words"><b>Number:</b> {claim.itemId?.phoneNo || "N/A"}</p>
               <p><b>Item:</b> {claim.itemId?.title}</p>
               <p><b>Name:</b> {claim.claimedBy?.name}</p>
               <p className="break-words"><b>Email:</b> {claim.claimedBy?.email}</p>
