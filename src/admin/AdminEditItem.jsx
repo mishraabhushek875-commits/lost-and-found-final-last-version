@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import { updateItem } from "../Redux/store/adminSlice";
 import AdminNavbar from "./AdminNavbar";
 import { FaArrowLeft, FaEdit, FaCheck, FaTimes, FaExclamationTriangle } from "react-icons/fa";
 import { toast } from "sonner";
+import axios from "axios";
+
+const backendURL = import.meta.env.VITE_BACKEND_URL;
 
 const AdminEditItem = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { data, loading } = useSelector((state) => state.items);
-
-  const existingItem = data?.items?.find((item) => item._id === id);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -21,24 +21,46 @@ const AdminEditItem = () => {
     status: "lost",
   });
 
+  // ✅ Ab apna local state hai — Redux pe depend nahi
+  const [existingItem, setExistingItem] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
 
+  // ✅ Direct API se item fetch karo by ID
   useEffect(() => {
-    if (existingItem) {
-      setFormData({
-        title: existingItem.title,
-        description: existingItem.description,
-        category: existingItem.category,
-        status: existingItem.status,
-      });
-    }
-  }, [existingItem]);
+    const fetchItem = async () => {
+      try {
+        setLoading(true);
+        const token = localStorage.getItem("token");
+        const res = await axios.get(`${backendURL}items/${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        // API se jo item aaya usse state mein save karo
+        const item = res.data?.data?.item || res.data?.data;
+        setExistingItem(item);
+        setFormData({
+          title: item.title,
+          description: item.description,
+          category: item.category,
+          status: item.status,
+        });
+      } catch (err) {
+        console.error("Item fetch failed:", err);
+        setNotFound(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchItem();
+  }, [id]); // ✅ sirf id change hone pe dobara fetch ho
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    // Clear error for this field
     if (errors[name]) {
       setErrors({ ...errors, [name]: "" });
     }
@@ -56,13 +78,11 @@ const AdminEditItem = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = validateForm();
-
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       toast.error("Please fix all errors before submitting");
       return;
     }
-
     setIsSubmitting(true);
     try {
       await dispatch(updateItem({ id, updatedData: formData })).unwrap();
@@ -76,6 +96,7 @@ const AdminEditItem = () => {
     }
   };
 
+  // ✅ Loading screen
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800">
@@ -90,7 +111,8 @@ const AdminEditItem = () => {
     );
   }
 
-  if (!existingItem) {
+  // ✅ Not found screen
+  if (notFound || !existingItem) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800">
         <AdminNavbar />
@@ -118,9 +140,7 @@ const AdminEditItem = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       <AdminNavbar />
-
       <div className="p-6 sm:p-8 lg:p-10">
-        {/* Back Button */}
         <button
           onClick={() => navigate("/admin/manage-items")}
           className="flex items-center gap-2 text-blue-400 hover:text-blue-300 mb-8 transition-colors font-semibold group"
@@ -129,11 +149,8 @@ const AdminEditItem = () => {
           Back to Manage Items
         </button>
 
-        {/* Main Container */}
         <div className="max-w-2xl mx-auto">
-          {/* Card */}
           <div className="bg-slate-700 rounded-2xl shadow-2xl p-8 border border-slate-600">
-            {/* Header */}
             <div className="flex items-center gap-3 mb-8">
               <div className="p-3 bg-blue-600 rounded-xl">
                 <FaEdit className="text-white text-2xl" />
@@ -144,12 +161,10 @@ const AdminEditItem = () => {
               </div>
             </div>
 
-            {/* Divider */}
             <div className="border-t border-slate-600 mb-8"></div>
 
-            {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Title Field */}
+              {/* Title */}
               <div>
                 <label className="block text-sm font-bold text-slate-300 mb-3 uppercase tracking-wider">
                   Item Title
@@ -160,10 +175,11 @@ const AdminEditItem = () => {
                   value={formData.title}
                   onChange={handleChange}
                   placeholder="Enter item title..."
-                  className={`w-full px-4 py-3 bg-slate-600 text-white rounded-lg placeholder-slate-400 border-2 transition-all ${errors.title
+                  className={`w-full px-4 py-3 bg-slate-600 text-white rounded-lg placeholder-slate-400 border-2 transition-all ${
+                    errors.title
                       ? "border-red-500 focus:border-red-500 focus:ring-red-500/50"
                       : "border-slate-500 focus:border-blue-500 focus:ring-blue-500/50"
-                    } focus:ring-2 focus:outline-none`}
+                  } focus:ring-2 focus:outline-none`}
                 />
                 {errors.title && (
                   <p className="mt-2 text-red-400 text-sm font-medium flex items-center gap-1">
@@ -172,7 +188,7 @@ const AdminEditItem = () => {
                 )}
               </div>
 
-              {/* Description Field */}
+              {/* Description */}
               <div>
                 <label className="block text-sm font-bold text-slate-300 mb-3 uppercase tracking-wider">
                   Description
@@ -183,10 +199,11 @@ const AdminEditItem = () => {
                   onChange={handleChange}
                   placeholder="Enter detailed description..."
                   rows="5"
-                  className={`w-full px-4 py-3 bg-slate-600 text-white rounded-lg placeholder-slate-400 border-2 transition-all resize-none ${errors.description
+                  className={`w-full px-4 py-3 bg-slate-600 text-white rounded-lg placeholder-slate-400 border-2 transition-all resize-none ${
+                    errors.description
                       ? "border-red-500 focus:border-red-500 focus:ring-red-500/50"
                       : "border-slate-500 focus:border-blue-500 focus:ring-blue-500/50"
-                    } focus:ring-2 focus:outline-none`}
+                  } focus:ring-2 focus:outline-none`}
                 />
                 {errors.description && (
                   <p className="mt-2 text-red-400 text-sm font-medium flex items-center gap-1">
@@ -198,7 +215,7 @@ const AdminEditItem = () => {
                 </p>
               </div>
 
-              {/* Category Field */}
+              {/* Category */}
               <div>
                 <label className="block text-sm font-bold text-slate-300 mb-3 uppercase tracking-wider">
                   Category
@@ -220,7 +237,7 @@ const AdminEditItem = () => {
                 </select>
               </div>
 
-              {/* Status Field */}
+              {/* Status */}
               <div>
                 <label className="block text-sm font-bold text-slate-300 mb-3 uppercase tracking-wider">
                   Status
@@ -229,20 +246,22 @@ const AdminEditItem = () => {
                   <button
                     type="button"
                     onClick={() => setFormData({ ...formData, status: "lost" })}
-                    className={`px-4 py-3 rounded-lg font-bold transition-all flex items-center justify-center gap-2 ${formData.status === "lost"
+                    className={`px-4 py-3 rounded-lg font-bold transition-all flex items-center justify-center gap-2 ${
+                      formData.status === "lost"
                         ? "bg-red-600 text-white shadow-lg"
                         : "bg-slate-600 text-slate-300 hover:bg-slate-500"
-                      }`}
+                    }`}
                   >
                     Lost
                   </button>
                   <button
                     type="button"
                     onClick={() => setFormData({ ...formData, status: "found" })}
-                    className={`px-4 py-3 rounded-lg font-bold transition-all flex items-center justify-center gap-2 ${formData.status === "found"
+                    className={`px-4 py-3 rounded-lg font-bold transition-all flex items-center justify-center gap-2 ${
+                      formData.status === "found"
                         ? "bg-green-600 text-white shadow-lg"
                         : "bg-slate-600 text-slate-300 hover:bg-slate-500"
-                      }`}
+                    }`}
                   >
                     Found
                   </button>
@@ -255,11 +274,11 @@ const AdminEditItem = () => {
                   <span className="font-semibold">Item ID:</span> {id.substring(0, 12)}...
                 </p>
                 <p className="text-slate-300 text-sm mt-2">
-                  <span className="font-semibold">Last Modified:</span> {new Date(existingItem.updatedAt || existingItem.createdAt).toLocaleDateString()}
+                  <span className="font-semibold">Last Modified:</span>{" "}
+                  {new Date(existingItem.updatedAt || existingItem.createdAt).toLocaleDateString()}
                 </p>
               </div>
 
-              {/* Divider */}
               <div className="border-t border-slate-600 my-8"></div>
 
               {/* Buttons */}

@@ -7,15 +7,13 @@ const backendURL = import.meta.env.VITE_BACKEND_URL;
 
 export const fetchItems = createAsyncThunk(
   "items/fetchAll",
-  async ({ page = 1 }, { rejectWithValue }) => {
+  async ({ page = 1, status = "" }, { rejectWithValue }) => {
     try {
-      const res = await axios.get(`${backendURL}items?page=${page}`);
-      console.log(res.data);
+      const query = status ? `page=${page}&status=${status}` : `page=${page}`;
+      const res = await axios.get(`${backendURL}items?${query}`);
       return res.data;
     } catch (error) {
-      return rejectWithValue(
-        error.response?.data || "Network error"
-      );
+      return rejectWithValue(error.response?.data || "Network error");
     }
   }
 );
@@ -29,9 +27,7 @@ export const fetchItem = createAsyncThunk(
       const res = await axios.get(`${backendURL}items/${id}`);
       return res.data;
     } catch (error) {
-      return rejectWithValue(
-        error.response?.data || "Network error"
-      );
+      return rejectWithValue(error.response?.data || "Network error");
     }
   }
 );
@@ -44,23 +40,40 @@ export const createItem = createAsyncThunk(
     try {
       const token = localStorage.getItem("token");
 
-      // ✅ Reject early if no token
-      if (!token) {
-        return rejectWithValue("You must be logged in to report a found item.");
-      }
+      const res = await axios.post(`${backendURL}items`, formDataToSend, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-      const res = await axios.post(
-        `${backendURL}items`,
-        formDataToSend,
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Network error");
+    }
+  }
+);
+
+/* ================= UPDATE ITEM (🔥 FIXED) ================= */
+
+export const updateItem = createAsyncThunk(
+  "items/update",
+  async ({ id, updatedData }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await axios.put(
+        `${backendURL}items/${id}`,
+        updatedData,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`, // ✅ IMPORTANT FIX
           },
         }
       );
 
       return res.data;
     } catch (error) {
+      console.log("UPDATE ERROR:", error.response?.data); // 👈 DEBUG
       return rejectWithValue(error.response?.data || "Network error");
     }
   }
@@ -86,9 +99,28 @@ export const submitClaim = createAsyncThunk(
 
       return res.data;
     } catch (error) {
-      return rejectWithValue(
-        error.response?.data || "Network error"
-      );
+      return rejectWithValue(error.response?.data || "Network error");
+    }
+  }
+);
+
+/* ================= MY CLAIMS ================= */
+
+export const myClaim = createAsyncThunk(
+  "item/my-claim",
+  async (_, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await axios.get(`${backendURL}user/my-claims`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Network error");
     }
   }
 );
@@ -99,20 +131,28 @@ const itemsSlice = createSlice({
   name: "items",
 
   initialState: {
-    // Data
     items: [],
+    foundItems: [],
+    lostItems: [],
     singleItem: null,
-    pagination: {},
 
-    // Loading states
+    pagination: {},
+    lostPagination: {},
+    foundPagination: {},
+
+    myclaims: [],
+
     fetchLoading: false,
     createLoading: false,
+    updateLoading: false, // ✅ NEW
     claimLoading: false,
+    myclaimsLoading: false,
 
-    // Success states (Separate!)
     fetchSuccess: false,
     createSuccess: false,
+    updateSuccess: false, // ✅ NEW
     claimSuccess: false,
+    myclaimsSuccess: false,
 
     error: null,
   },
@@ -120,6 +160,7 @@ const itemsSlice = createSlice({
   reducers: {
     resetItemState: (state) => {
       state.createSuccess = false;
+      state.updateSuccess = false; // ✅ NEW
       state.claimSuccess = false;
       state.fetchSuccess = false;
       state.error = null;
@@ -132,13 +173,23 @@ const itemsSlice = createSlice({
       /* ===== FETCH ALL ===== */
       .addCase(fetchItems.pending, (state) => {
         state.fetchLoading = true;
-        state.error = null;
       })
       .addCase(fetchItems.fulfilled, (state, action) => {
         state.fetchLoading = false;
-        state.fetchSuccess = true;
-        state.items = action.payload.data.items;
-        state.pagination = action.payload.data.pagination;
+
+        const { items, pagination } = action.payload.data;
+        const status = action.meta.arg.status;
+
+        if (status === "lost") {
+          state.lostItems = items;
+          state.lostPagination = pagination;
+        } else if (status === "found") {
+          state.foundItems = items;
+          state.foundPagination = pagination;
+        } else {
+          state.items = items;
+          state.pagination = pagination;
+        }
       })
       .addCase(fetchItems.rejected, (state, action) => {
         state.fetchLoading = false;
@@ -146,23 +197,13 @@ const itemsSlice = createSlice({
       })
 
       /* ===== FETCH SINGLE ===== */
-      .addCase(fetchItem.pending, (state) => {
-        state.fetchLoading = true;
-        state.error = null;
-      })
       .addCase(fetchItem.fulfilled, (state, action) => {
-        state.fetchLoading = false;
         state.singleItem = action.payload.data;
-      })
-      .addCase(fetchItem.rejected, (state, action) => {
-        state.fetchLoading = false;
-        state.error = action.payload;
       })
 
       /* ===== CREATE ITEM ===== */
       .addCase(createItem.pending, (state) => {
         state.createLoading = true;
-        state.error = null;
       })
       .addCase(createItem.fulfilled, (state) => {
         state.createLoading = false;
@@ -173,18 +214,27 @@ const itemsSlice = createSlice({
         state.error = action.payload;
       })
 
-      /* ===== CLAIM ITEM ===== */
-      .addCase(submitClaim.pending, (state) => {
-        state.claimLoading = true;
-        state.error = null;
+      /* ===== UPDATE ITEM (🔥 IMPORTANT) ===== */
+      .addCase(updateItem.pending, (state) => {
+        state.updateLoading = true;
       })
+      .addCase(updateItem.fulfilled, (state) => {
+        state.updateLoading = false;
+        state.updateSuccess = true;
+      })
+      .addCase(updateItem.rejected, (state, action) => {
+        state.updateLoading = false;
+        state.error = action.payload;
+      })
+
+      /* ===== CLAIM ===== */
       .addCase(submitClaim.fulfilled, (state) => {
-        state.claimLoading = false;
         state.claimSuccess = true;
       })
-      .addCase(submitClaim.rejected, (state, action) => {
-        state.claimLoading = false;
-        state.error = action.payload;
+
+      /* ===== MY CLAIMS ===== */
+      .addCase(myClaim.fulfilled, (state, action) => {
+        state.myclaims = action.payload.data;
       });
   },
 });

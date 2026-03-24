@@ -1,69 +1,67 @@
-// src/App.jsx
 import React from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import SignUp from "./page/SignUp";
 import { Toaster } from "sonner";
 
-// User Pages
 import Home from "./page/Home";
 import About from "./page/About";
 import Contact from "./page/Contact";
-import LostItem from "./page/LostItem"; // list page
-import FoundItem from "./page/FoundItem"; // list page
+import LostItem from "./page/LostItem";
+import FoundItem from "./page/FoundItem";
 import Login from "./page/Login";
 import Report from "./page/Report";
-import ReportLost from "./page/ReportLost"; // form page
-import ReportFound from "./page/ReportFound"; // form page
+import ReportLost from "./page/ReportLost";
+import ReportFound from "./page/ReportFound";
+import MyClaim from "./page/MyClaim";
+import ItemDetail from "./page/ItemsDetail";
 
-// Admin Pages
 import AdminDashboard from "./admin/AdminDashboard";
 import AdminLogin from "./admin/AdminLogin";
 import AdminManageItems from "./admin/AdminManageItems";
-
-// Layout Components
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
-
-import "./App.css";
-import ItemDetail from "./page/ItemsDetail";
 import AdminEditItem from "./admin/AdminEditItem";
 import AdminClaimedItems from "./admin/claimedItem";
 
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import ProtectedRoute from "./components/ProtectedRoute";
+
+import "./App.css";
+
 function App() {
   const location = useLocation();
-
-  // Check if current path starts with "/admin"
   const isAdminRoute = location.pathname.startsWith("/admin");
 
   return (
-    <div className="App">
-      {/* Show user Navbar/Footer only if NOT on admin routes */}
+    <div className="App flex flex-col min-h-screen">
       {!isAdminRoute && <Navbar />}
       <Toaster position="top-right" />
 
-      {/* Routes */}
-      <Routes>
-        {/* User Routes */}
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/lost-item" element={<LostItem />} />
-        <Route path="/found-item" element={<FoundItem />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/report" element={<Report />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/report-lost" element={<ReportLost />} />
-        <Route path="/report-found" element={<ReportFound />} />
-        <Route path="/item/:id" element={<ItemDetail />} />
-        {/* Admin Routes */}
-        <Route path="/admin/login" element={<AdminLogin />} />
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        
-        
-        <Route path="/admin/manage-items" element={<AdminManageItems />} />
-        <Route path="/admin/items/edit/:id" element={<AdminEditItem />} />
-        <Route path="/admin/claim" element={<AdminClaimedItems />} />
-      </Routes>
+      <main className="flex-grow">
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
+
+          {/* Protected User Routes */}
+          <Route path="/lost-item" element={<ProtectedRoute><LostItem /></ProtectedRoute>} />
+          <Route path="/found-item" element={<ProtectedRoute><FoundItem /></ProtectedRoute>} />
+          <Route path="/report" element={<ProtectedRoute><Report /></ProtectedRoute>} />
+          <Route path="/report-lost" element={<ProtectedRoute><ReportLost /></ProtectedRoute>} />
+          <Route path="/report-found" element={<ProtectedRoute><ReportFound /></ProtectedRoute>} />
+          <Route path="/item/:id" element={<ProtectedRoute><ItemDetail /></ProtectedRoute>} />
+          <Route path="/user/my-claims" element={<ProtectedRoute><MyClaim /></ProtectedRoute>} />
+
+          {/* Protected Admin Routes */}
+          <Route path="/admin/dashboard" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+          <Route path="/admin/manage-items" element={<ProtectedRoute><AdminManageItems /></ProtectedRoute>} />
+          <Route path="/admin/items/edit/:id" element={<ProtectedRoute><AdminEditItem /></ProtectedRoute>} />
+          <Route path="/admin/claim" element={<ProtectedRoute><AdminClaimedItems /></ProtectedRoute>} />
+        </Routes>
+      </main>
 
       {!isAdminRoute && <Footer />}
     </div>

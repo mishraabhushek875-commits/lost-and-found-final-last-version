@@ -8,24 +8,23 @@ import { toast } from "sonner";
 const FoundItems = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { items, pagination, loading, error } = useSelector((state) => state.items);
 
+  // ✅ loading → fetchLoading
+  const { foundItems, pagination, fetchLoading, error } = useSelector((state) => state.items);
 
   useEffect(() => {
-    dispatch(fetchItems({ page: 1 }));
-    console.log(items);
-
+    dispatch(fetchItems({ page: 1, status: "found" })); // ✅ status add
   }, [dispatch]);
 
   const handleNext = () => {
     if (pagination.hasNext) {
-      dispatch(fetchItems({ page: pagination.page + 1 }));
+      dispatch(fetchItems({ page: pagination.page + 1, status: "found" })); // ✅
     }
   };
 
   const handlePrev = () => {
     if (pagination.page > 1) {
-      dispatch(fetchItems({ page: pagination.page - 1 }));
+      dispatch(fetchItems({ page: pagination.page - 1, status: "found" })); // ✅
     }
   };
 
@@ -35,7 +34,7 @@ const FoundItems = () => {
         Found Items
       </h2>
 
-      {loading && (
+      {fetchLoading && ( // ✅
         <div className="flex justify-center items-center h-40">
           <p className="text-gray-500 animate-pulse">Loading items...</p>
         </div>
@@ -47,19 +46,19 @@ const FoundItems = () => {
         </div>
       )}
 
-      {!loading && !error && (
+      {!fetchLoading && !error && ( // ✅
         <>
-          {items.length === 0 ? (
+          {foundItems.length === 0 ? ( // ✅ foundItems
             <p className="text-gray-600 text-center mt-10">
               No found items reported yet.
             </p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {items.map((item) => (
+              {foundItems.map((item) => ( // ✅ foundItems
                 <div
                   key={item._id}
                   onClick={() => navigate(`/item/${item._id}`)}
-                  className="cursor-pointer transform hover:scale-105 transition-transform duration-200 "
+                  className="cursor-pointer transform hover:scale-105 transition-transform duration-200"
                 >
                   <ItemCard item={item} />
                 </div>
@@ -67,7 +66,6 @@ const FoundItems = () => {
             </div>
           )}
 
-          {/* Pagination */}
           <div className="flex justify-center items-center mt-8 space-x-4">
             <button
               onClick={handlePrev}
