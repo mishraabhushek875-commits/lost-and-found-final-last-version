@@ -20,11 +20,11 @@ const AdminClaimedItems = () => {
     (state) => state.admin
   );
 
-useEffect(() => {
-  dispatch(claimedItems()).then((res) => {
-    console.log("CLAIM DATA:", res.payload);
-  });
-}, [dispatch]);
+  useEffect(() => {
+    dispatch(claimedItems()).then((res) => {
+      console.log("CLAIM DATA:", res.payload);
+    });
+  }, [dispatch]);
 
   const handleApprove = (id) => {
     if (window.confirm("Approve this claim?")) {
@@ -85,27 +85,27 @@ useEffect(() => {
       <AdminNavbar />
 
       <div className="p-6">
-        <h1 className="text-3xl font-bold mb-6">Claims</h1>
+        <h1 className="text-2xl md:text-3xl font-bold mb-6">Claims</h1>
 
         {error && (
-          <div className="bg-red-500/20 p-3 mb-4">
+          <div className="bg-red-500/20 p-3 mb-4 flex items-center gap-2 rounded">
             <FaExclamationCircle /> {error}
           </div>
         )}
 
-        {/* ================= TABLE ================= */}
-        <div className="hidden md:block bg-slate-800 rounded-lg overflow-hidden">
-          <table className="w-full">
+        {/* ================= TABLE (Desktop) ================= */}
+        <div className="hidden md:block bg-slate-800 rounded-lg overflow-x-auto shadow">
+          <table className="w-full min-w-[700px] border-collapse">
             <thead className="bg-slate-700">
               <tr>
-                <th className="p-3">Student ID</th>
-                <th className="p-3">Number</th> {/* ✅ NEW */}
-                <th className="p-3">Item</th>
-                <th className="p-3">Name</th>
-                <th className="p-3">Email</th>
-                <th className="p-3">Proof</th>
-                <th className="p-3">Status</th>
-                <th className="p-3">Actions</th>
+                <th className="p-3 text-left">Student ID</th>
+                <th className="p-3 text-left">Number</th>
+                <th className="p-3 text-left">Item</th>
+                <th className="p-3 text-left">Name</th>
+                <th className="p-3 text-left">Email</th>
+                <th className="p-3 text-left">Proof</th>
+                <th className="p-3 text-left">Status</th>
+                <th className="p-3 text-left">Actions</th>
               </tr>
             </thead>
 
@@ -119,59 +119,38 @@ useEffect(() => {
               ) : (
                 claims.map((claim) => (
                   <tr key={claim._id} className="border-t border-slate-700">
-
-                    <td className="p-3">
-                      {claim.claimedBy?.studentId || "N/A"}
-                    </td>
-
-                    {/* ✅ NUMBER */}
-                    <td className="p-3">
-                      {claim.claimedBy?.phone || "N/A"}
-                    </td>
-
-                    <td className="p-3">
-                      {claim.itemId?.title}
-                    </td>
-
-                    <td className="p-3">
-                      {claim.claimedBy?.name}
-                    </td>
-
-                    <td className="p-3">
-                      {claim.claimedBy?.email}
-                    </td>
-
-                    <td className="p-3 max-w-xs truncate">
+                    <td className="p-3">{claim.claimedBy?.studentId || "N/A"}</td>
+                    <td className="p-3">{claim.claimedBy?.phone || "N/A"}</td>
+                    <td className="p-3">{claim.itemId?.title}</td>
+                    <td className="p-3">{claim.claimedBy?.name}</td>
+                    <td className="p-3 break-words">{claim.claimedBy?.email}</td>
+                    <td className="p-3 max-w-[200px] truncate bg-slate-700/40 rounded px-2">
                       {claim.proof || "No proof"}
                     </td>
-
                     <td className="p-3 flex items-center gap-2">
                       {getStatusIcon(claim.status)}
                       <span className={getStatusColor(claim.status)}>
                         {claim.status || "Pending"}
                       </span>
                     </td>
-
                     <td className="p-3">
                       {(!claim.status || claim.status === "pending") && (
                         <div className="flex gap-2">
                           <button
                             onClick={() => handleApprove(claim._id)}
-                            className="bg-green-600 px-3 py-1 rounded"
+                            className="bg-green-600 px-3 py-1 rounded hover:bg-green-700 transition"
                           >
                             Approve
                           </button>
-
                           <button
                             onClick={() => handleReject(claim._id)}
-                            className="bg-red-600 px-3 py-1 rounded"
+                            className="bg-red-600 px-3 py-1 rounded hover:bg-red-700 transition"
                           >
                             Reject
                           </button>
                         </div>
                       )}
                     </td>
-
                   </tr>
                 ))
               )}
@@ -182,37 +161,34 @@ useEffect(() => {
         {/* ================= MOBILE ================= */}
         <div className="md:hidden space-y-4">
           {claims.map((claim) => (
-            <div key={claim._id} className="bg-slate-800 p-4 rounded-lg">
-
-              <p><b>Student ID:</b> {claim.claimedBy?.studentId}</p>
-              <p><b>Number:</b> {claim.claimedBy?.phone}</p> {/* ✅ */}
+            <div key={claim._id} className="bg-slate-800 p-4 rounded-lg shadow space-y-1">
+              <p className="break-words"><b>Student ID:</b> {claim.claimedBy?.studentId || "N/A"}</p>
+              <p className="break-words"><b>Number:</b> {claim.claimedBy?.phone || "N/A"}</p>
               <p><b>Item:</b> {claim.itemId?.title}</p>
               <p><b>Name:</b> {claim.claimedBy?.name}</p>
-              <p><b>Email:</b> {claim.claimedBy?.email}</p>
-              <p><b>Proof:</b> {claim.proof}</p>
+              <p className="break-words"><b>Email:</b> {claim.claimedBy?.email}</p>
+              <p className="break-words bg-slate-700/40 rounded px-2 py-1"><b>Proof:</b> {claim.proof || "No proof"}</p>
 
               <p className="mt-2">
                 <b>Status:</b> {claim.status || "Pending"}
               </p>
 
               {(!claim.status || claim.status === "pending") && (
-                <div className="flex gap-2 mt-3">
+                <div className="flex flex-wrap gap-2 mt-3">
                   <button
                     onClick={() => handleApprove(claim._id)}
-                    className="bg-green-600 px-3 py-1 rounded"
+                    className="bg-green-600 px-3 py-1 rounded w-full sm:w-auto hover:bg-green-700 transition"
                   >
                     Approve
                   </button>
-
                   <button
                     onClick={() => handleReject(claim._id)}
-                    className="bg-red-600 px-3 py-1 rounded"
+                    className="bg-red-600 px-3 py-1 rounded w-full sm:w-auto hover:bg-red-700 transition"
                   >
                     Reject
                   </button>
                 </div>
               )}
-
             </div>
           ))}
         </div>
