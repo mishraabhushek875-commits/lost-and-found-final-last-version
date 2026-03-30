@@ -10,21 +10,22 @@ const FoundItems = () => {
   const dispatch = useDispatch();
 
   // ✅ loading → fetchLoading
-  const { foundItems, pagination, fetchLoading, error } = useSelector((state) => state.items);
+  const { foundItems, foundPagination, fetchLoading, error } = useSelector((state) => state.items);
 
   useEffect(() => {
     dispatch(fetchItems({ page: 1, status: "found" })); // ✅ status add
   }, [dispatch]);
 
   const handleNext = () => {
-    if (pagination.hasNext) {
-      dispatch(fetchItems({ page: pagination.page + 1, status: "found" })); // ✅
+    if (foundPagination.hasNext) {
+      dispatch(fetchItems({ page: foundPagination.page + 1, status: "found" })); // ✅
+      console.log(foundPagination.page);
     }
   };
 
   const handlePrev = () => {
-    if (pagination.page > 1) {
-      dispatch(fetchItems({ page: pagination.page - 1, status: "found" })); // ✅
+    if (foundPagination.page > 1) {
+      dispatch(fetchItems({ page: foundPagination.page - 1, status: "found" })); // ✅
     }
   };
 
@@ -69,17 +70,17 @@ const FoundItems = () => {
           <div className="flex justify-center items-center mt-8 space-x-4">
             <button
               onClick={handlePrev}
-              disabled={pagination.page === 1}
+              disabled={foundPagination.page === 1}
               className="px-5 py-2 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50 transition-colors"
             >
               Previous
             </button>
             <span className="text-sm text-gray-700 font-medium">
-              Page {pagination.page} of {pagination.pages}
-            </span>
+  Page {foundPagination.page} of {foundPagination.pages}
+</span>
             <button
               onClick={handleNext}
-              disabled={!pagination.hasNext}
+              disabled={!foundPagination.hasNext}
               className="px-5 py-2 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50 transition-colors"
             >
               Next

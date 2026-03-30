@@ -10,7 +10,7 @@ const LostItems = () => {
   const dispatch = useDispatch();
 
   // ✅ items → lostItems (alag array se aayega)
-  const { lostItems, pagination, fetchLoading, error } = useSelector((state) => state.items);
+  const { lostItems, lostPagination, fetchLoading, error } = useSelector((state) => state.items);
 
   useEffect(() => {
     dispatch(fetchItems({ page: 1, status: "lost" }));
@@ -18,14 +18,14 @@ const LostItems = () => {
   // ✅ debug useEffect hatao
 
   const handleNext = () => {
-    if (pagination.hasNext) {
-      dispatch(fetchItems({ page: pagination.page + 1, status: "lost" }));
+    if (lostPagination.hasNext) {
+      dispatch(fetchItems({ page: lostPagination.page + 1, status: "lost" }));
     }
   };
 
   const handlePrev = () => {
-    if (pagination.page > 1) {
-      dispatch(fetchItems({ page: pagination.page - 1, status: "lost" }));
+    if (lostPagination.page > 1) {
+      dispatch(fetchItems({ page: lostPagination.page - 1, status: "lost" }));
     }
   };
 
@@ -70,17 +70,17 @@ const LostItems = () => {
           <div className="flex justify-center items-center mt-8 space-x-4">
             <button
               onClick={handlePrev}
-              disabled={pagination.page === 1}
+              disabled={lostPagination.page === 1}
               className="px-5 py-2 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50 transition-colors"
             >
               Previous
             </button>
             <span className="text-sm text-gray-700 font-medium">
-              Page {pagination.page} of {pagination.pages}
+              Page {lostPagination.page} of {lostPagination.pages}
             </span>
             <button
               onClick={handleNext}
-              disabled={!pagination.hasNext}
+              disabled={!lostPagination.hasNext}
               className="px-5 py-2 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50 transition-colors"
             >
               Next

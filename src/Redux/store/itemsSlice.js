@@ -199,6 +199,8 @@ const itemsSlice = createSlice({
       /* ===== FETCH SINGLE ===== */
       .addCase(fetchItem.fulfilled, (state, action) => {
         state.singleItem = action.payload.data;
+          console.log("FULL PAYLOAD:", action.payload);         // 👈 add karo
+  console.log("PAGINATION:", action.payload.data?.pagination);
       })
 
       /* ===== CREATE ITEM ===== */
