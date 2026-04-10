@@ -14,6 +14,7 @@ import ReportLost from "./page/ReportLost";
 import ReportFound from "./page/ReportFound";
 import MyClaim from "./page/MyClaim";
 import ItemDetail from "./page/ItemsDetail";
+import VerifyOtp from "./page/VerifyOtp";
 
 import AdminDashboard from "./admin/AdminDashboard";
 import AdminLogin from "./admin/AdminLogin";
@@ -45,6 +46,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/admin/login" element={<AdminLogin />} />
+
+          <Route path="/verify-otp" element={<VerifyOtp />} />
 
           {/* Protected User Routes */}
           <Route path="/lost-item" element={<ProtectedRoute><LostItem /></ProtectedRoute>} />

@@ -16,27 +16,30 @@ const CATEGORIES = [
 ];
 
 const Field = ({ label, required, children }) => (
-  <div className="flex flex-col sm:flex-row gap-1.5 sm:gap-4">
-    <label className="sm:w-36 sm:text-right text-xs sm:text-sm font-medium text-slate-600 sm:pt-2">
+  <div className="flex flex-col gap-1.5">
+    <label className="text-xs sm:text-sm font-medium text-slate-600">
       {label}
       {required && <span className="text-red-400 ml-1">*</span>}
     </label>
-    <div className="flex-1 w-full">{children}</div>
+    <div className="w-full">{children}</div>
   </div>
 );
 
 const inputCls =
-  "w-full px-3 sm:px-4 py-2.5 text-sm sm:text-base rounded-lg sm:rounded-xl border border-slate-200 bg-white text-slate-800 placeholder-slate-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-400 transition-all";
+  "w-full px-3 py-2.5 text-sm rounded-xl border border-slate-200 bg-white text-slate-800 placeholder-slate-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-400 transition-all";
+
+const inputWithIconCls =
+  "w-full pl-9 pr-3 py-2.5 text-sm rounded-xl border border-slate-200 bg-white text-slate-800 placeholder-slate-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-400 transition-all";
 
 const IconSlot = ({ children }) => (
-  <span className="absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 text-slate-400">
+  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
     {children}
   </span>
 );
 
 const SectionHead = ({ num, title, note }) => (
   <div className="px-4 sm:px-6 py-3 border-b border-slate-100 bg-slate-50 flex items-center gap-2">
-    <span className="w-5 h-5 rounded-full bg-rose-100 text-rose-500 text-xs flex items-center justify-center font-semibold">
+    <span className="w-5 h-5 rounded-full bg-rose-100 text-rose-500 text-xs flex items-center justify-center font-semibold flex-shrink-0">
       {num}
     </span>
     <h2 className="text-xs font-semibold text-slate-600 uppercase tracking-wider">{title}</h2>
@@ -48,20 +51,21 @@ const ReportLost = () => {
   const navigate     = useNavigate();
   const dispatch     = useDispatch();
   const { createSuccess, createLoading, error } = useSelector((s) => s.items);
-  const fileInputRef = useRef(null);
 
-  // ✅ Backend ke exact field names use kar rahe hain
+  const fileInputRef   = useRef(null);
+  const cameraInputRef = useRef(null);
+
   const [formData, setFormData] = useState({
-    title:        "",   // ✅ backend: title
+    title:        "",
     location:     "",
     description:  "",
     date:         "",
     category:     "other",
     imagePreview: "",
     file:         null,
-    reporterName: "",   // ✅ backend: reporterName
-    UserId:       "",   // ✅ backend: UserId
-    phoneNo:      "",   // ✅ backend: phoneNo
+    reporterName: "",
+    UserId:       "",
+    phoneNo:      "",
   });
 
   const [dragOver, setDragOver] = useState(false);
@@ -94,42 +98,33 @@ const ReportLost = () => {
 
   const removeImage = () => {
     setFormData((p) => ({ ...p, imagePreview: "", file: null }));
-    if (fileInputRef.current) fileInputRef.current.value = "";
+    if (fileInputRef.current)   fileInputRef.current.value   = "";
+    if (cameraInputRef.current) cameraInputRef.current.value = "";
   };
 
-  // ✅ FIXED handleSubmit
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Validation pehle
     if (!formData.title.trim())        { toast.error("Item name likhein");      return; }
     if (!formData.description.trim())  { toast.error("Description likhein");    return; }
     if (!formData.category)            { toast.error("Category select karein"); return; }
     if (!formData.location.trim())     { toast.error("Location likhein");       return; }
-    if (!formData.date)                { toast.error("Date select karein");      return; }
+    if (!formData.date)                { toast.error("Date select karein");     return; }
     if (!formData.reporterName.trim()) { toast.error("Naam likhein");           return; }
     if (!formData.UserId.trim())       { toast.error("ID likhein");             return; }
     if (!formData.phoneNo.trim())      { toast.error("Contact number likhein"); return; }
 
-    // ✅ Backend ke exact field names se FormData banao
     const fd = new FormData();
     fd.append("title",        formData.title);
     fd.append("description",  formData.description);
     fd.append("category",     formData.category);
     fd.append("location",     formData.location);
     fd.append("date",         formData.date);
-    fd.append("status",       "lost");              // ✅ status = lost
+    fd.append("status",       "lost");
     fd.append("reporterName", formData.reporterName);
     fd.append("UserId",       formData.UserId);
     fd.append("phoneNo",      formData.phoneNo);
     if (formData.file) fd.append("image", formData.file);
 
-    // Debug log
-    for (let [key, value] of fd.entries()) {
-      console.log(key, "→", value);
-    }
-
-    // ✅ Sirf ek baar dispatch
     dispatch(createItem(fd));
   };
 
@@ -151,7 +146,7 @@ const ReportLost = () => {
 
         {/* Header */}
         <div className="mb-6 flex gap-3 items-center">
-          <div className="w-9 h-9 bg-rose-500 rounded-xl flex items-center justify-center">
+          <div className="w-9 h-9 bg-rose-500 rounded-xl flex items-center justify-center flex-shrink-0">
             <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                 d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
@@ -172,7 +167,6 @@ const ReportLost = () => {
             <SectionHead num="1" title="Item Details" />
             <div className="px-4 sm:px-6 py-4 space-y-4">
 
-              {/* ✅ name="title" — backend match */}
               <Field label="Item Name" required>
                 <input
                   name="title"
@@ -195,20 +189,22 @@ const ReportLost = () => {
               </Field>
 
               <Field label="Category" required>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                <div className="grid grid-cols-4 gap-2">
                   {CATEGORIES.map((cat) => (
                     <button
                       key={cat.value}
                       type="button"
                       onClick={() => set("category", cat.value)}
-                      className={`flex flex-col items-center gap-1 p-3 rounded-xl border text-xs font-medium transition-all
+                      className={`flex flex-col items-center justify-center gap-1 p-2 sm:p-3 rounded-xl border text-xs font-medium transition-all min-w-0 overflow-hidden
                         ${formData.category === cat.value
                           ? "border-rose-400 bg-rose-50 text-rose-600"
                           : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50"
                         }`}
                     >
-                      <span className="text-base leading-none">{cat.icon}</span>
-                      <span>{cat.label}</span>
+                      <span className="text-base sm:text-lg leading-none flex-shrink-0">{cat.icon}</span>
+                      <span className="w-full text-center leading-tight overflow-hidden text-ellipsis whitespace-nowrap">
+                        {cat.label}
+                      </span>
                     </button>
                   ))}
                 </div>
@@ -229,7 +225,7 @@ const ReportLost = () => {
                     value={formData.location}
                     onChange={handleChange}
                     placeholder="e.g. Library, Block C"
-                    className={`${inputCls} pl-9 sm:pl-10`}
+                    className={inputWithIconCls}
                   />
                 </div>
               </Field>
@@ -245,8 +241,10 @@ const ReportLost = () => {
                 />
               </Field>
 
-              {/* Photo Upload */}
+              {/* Photo Upload — Gallery + Camera */}
               <Field label="Photo">
+
+                {/* Gallery input */}
                 <input
                   ref={fileInputRef}
                   type="file"
@@ -254,47 +252,89 @@ const ReportLost = () => {
                   className="hidden"
                   onChange={(e) => handleImage(e.target.files[0])}
                 />
+
+                {/* Camera input — seedha camera kholta hai mobile pe */}
+                <input
+                  ref={cameraInputRef}
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  className="hidden"
+                  onChange={(e) => handleImage(e.target.files[0])}
+                />
+
                 {!formData.imagePreview ? (
                   <div
-                    onClick={() => fileInputRef.current?.click()}
                     onDrop={handleDrop}
                     onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
                     onDragLeave={() => setDragOver(false)}
-                    className={`flex flex-col items-center justify-center gap-2 w-full
-                      rounded-xl border-2 border-dashed cursor-pointer py-8 px-4
-                      transition-all select-none
+                    className={`flex flex-col items-center justify-center gap-3 w-full
+                      rounded-xl border-2 border-dashed py-8 px-4 transition-all select-none
                       ${dragOver
                         ? "border-rose-400 bg-rose-50"
-                        : "border-slate-200 bg-slate-50 hover:border-rose-300 hover:bg-rose-50/50"
+                        : "border-slate-200 bg-slate-50"
                       }`}
                   >
-                    <div className="w-10 h-10 rounded-full bg-rose-100 flex items-center justify-center text-xl">📷</div>
-                    <p className="text-sm font-medium text-slate-700">
-                      {dragOver ? "Yahan drop karein" : "Photo upload karein"}
-                    </p>
-                    <p className="text-xs text-slate-400 text-center">
-                      Click karein ya drag &amp; drop · PNG, JPG · max 10 MB
-                    </p>
-                    <button type="button"
-                      className="mt-1 px-4 py-1.5 text-xs bg-white border border-slate-200 rounded-lg text-slate-600 hover:border-rose-400 hover:text-rose-500 transition-all">
-                      File choose karein
-                    </button>
+                    <div className="w-10 h-10 rounded-full bg-rose-100 flex items-center justify-center">
+                      <svg className="w-5 h-5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
+                          d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
+                          d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
+                      </svg>
+                    </div>
+
+                    <p className="text-sm font-medium text-slate-700">Photo add karein</p>
+                    <p className="text-xs text-slate-400 text-center">PNG, JPG · max 10 MB</p>
+
+                    {/* Do buttons — Gallery aur Camera */}
+                    <div className="flex gap-2 mt-1">
+                      <button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        className="flex items-center gap-1.5 px-4 py-2 text-xs bg-white border border-slate-200 rounded-lg text-slate-600 hover:border-rose-400 hover:text-rose-500 transition-all"
+                      >
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
+                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        Gallery
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => cameraInputRef.current?.click()}
+                        className="flex items-center gap-1.5 px-4 py-2 text-xs bg-rose-500 border border-rose-500 rounded-lg text-white hover:bg-rose-600 transition-all"
+                      >
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
+                            d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
+                            d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                        Camera
+                      </button>
+                    </div>
                   </div>
                 ) : (
                   <div className="relative w-full rounded-xl overflow-hidden border border-slate-200 bg-slate-50">
                     <img src={formData.imagePreview} alt="Item preview" className="w-full max-h-56 object-contain" />
                     <div className="absolute top-2 right-2 flex gap-2">
                       <button type="button" onClick={() => fileInputRef.current?.click()}
-                        className="px-2.5 py-1 text-xs bg-white/90 backdrop-blur-sm border border-slate-200 rounded-lg text-slate-600 hover:border-rose-400 hover:text-rose-500 shadow-sm">
-                        ✏️ Change
+                        className="px-2.5 py-1 text-xs bg-white/90 border border-slate-200 rounded-lg text-slate-600 hover:border-rose-400 hover:text-rose-500 shadow-sm">
+                        Gallery
+                      </button>
+                      <button type="button" onClick={() => cameraInputRef.current?.click()}
+                        className="px-2.5 py-1 text-xs bg-white/90 border border-rose-200 rounded-lg text-rose-500 hover:bg-rose-50 shadow-sm">
+                        Camera
                       </button>
                       <button type="button" onClick={removeImage}
-                        className="px-2.5 py-1 text-xs bg-white/90 backdrop-blur-sm border border-red-200 rounded-lg text-red-500 hover:bg-red-50 shadow-sm">
-                        🗑 Remove
+                        className="px-2.5 py-1 text-xs bg-white/90 border border-red-200 rounded-lg text-red-500 hover:bg-red-50 shadow-sm">
+                        Remove
                       </button>
                     </div>
                     <div className="px-3 py-1.5 border-t border-slate-100 bg-white">
-                      <p className="text-xs text-slate-500 truncate">📎 {formData.file?.name}</p>
+                      <p className="text-xs text-slate-500 truncate">{formData.file?.name}</p>
                     </div>
                   </div>
                 )}
@@ -308,7 +348,6 @@ const ReportLost = () => {
             <SectionHead num="2" title="Reporter Information" />
             <div className="px-4 sm:px-6 py-4 space-y-4">
 
-              {/* ✅ name="reporterName" — backend match */}
               <Field label="Student Name" required>
                 <div className="relative">
                   <IconSlot>
@@ -322,12 +361,11 @@ const ReportLost = () => {
                     value={formData.reporterName}
                     onChange={handleChange}
                     placeholder="Your full name"
-                    className={`${inputCls} pl-9 sm:pl-10`}
+                    className={inputWithIconCls}
                   />
                 </div>
               </Field>
 
-              {/* ✅ name="UserId" — backend match */}
               <Field label="ID" required>
                 <div className="relative">
                   <IconSlot>
@@ -340,13 +378,12 @@ const ReportLost = () => {
                     name="UserId"
                     value={formData.UserId}
                     onChange={handleChange}
-                    placeholder="Student /Employee Id"
-                    className={`${inputCls} pl-9 sm:pl-10`}
+                    placeholder="Student / Employee ID"
+                    className={inputWithIconCls}
                   />
                 </div>
               </Field>
 
-              {/* ✅ name="phoneNo" — backend match */}
               <Field label="Contact" required>
                 <div className="relative">
                   <IconSlot>
@@ -361,7 +398,7 @@ const ReportLost = () => {
                     onChange={handleChange}
                     placeholder="Phone Number"
                     type="tel"
-                    className={`${inputCls} pl-9 sm:pl-10`}
+                    className={inputWithIconCls}
                   />
                 </div>
               </Field>
