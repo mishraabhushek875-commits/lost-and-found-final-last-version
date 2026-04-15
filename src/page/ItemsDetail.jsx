@@ -44,7 +44,13 @@ const ItemDetail = () => {
     }
 
     setProofError("");
-    dispatch(submitClaim({ proof, id }));
+    try {
+      dispatch(submitClaim({ proof, id }));
+      toast.success("Claim submitted successfully");
+    } catch (error) {
+      console.error(error);
+      toast.error("Error in submitting claim")
+    }
     setProof("");
   };
 

@@ -30,7 +30,7 @@ const Login = () => {
   // ── Status Watch ───────────────────────────────────────────
   useEffect(() => {
     if (status === "otpSent") {
-      toast.success("OTP bheja gaya! Email check karein");
+      toast.success("Check your email OTP has been sent on your email ");
 
       // 🎓 navigate("/verify-otp", { state: {...} })
       // state mein email aur from bhejo
@@ -161,7 +161,7 @@ const Login = () => {
           {/* Footer */}
           <div className="px-5 py-4 border-t border-slate-100 bg-slate-50/60 text-center">
             <p className="text-sm text-slate-500">
-              Account nahi hai?{" "}
+              do not have an account ?{" "}
               <span onClick={() => navigate("/signup")}
                 className="text-blue-600 font-medium cursor-pointer hover:underline">
                 Sign Up

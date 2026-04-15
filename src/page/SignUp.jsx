@@ -24,7 +24,7 @@ const SignUp = () => {
 
   useEffect(() => {
     if (status === "otpSent") {
-      toast.success("OTP bheja gaya! Email check karein");
+      toast.success("Check your Email OTP has been sent on oyur regsitered email ");
 
       navigate("/verify-otp", {
         state: {

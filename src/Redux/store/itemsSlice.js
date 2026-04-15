@@ -230,7 +230,11 @@ const itemsSlice = createSlice({
       })
 
       /* ===== CLAIM ===== */
-      .addCase(submitClaim.fulfilled, (state) => {
+      .addCase(submitClaim.fulfilled, (state,action) => {
+        state.loading=false;
+        console.log(action.payload);
+        
+        state.successMessage="Claim submitted successfully"
         state.claimSuccess = true;
       })
 
