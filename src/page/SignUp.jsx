@@ -94,7 +94,7 @@ const SignUp = () => {
                 </svg>
                 Sending  OTP...
               </>
-            ) : "Make  Account"}
+            ) : "Create  Account"}
           </button>
         </form>
 

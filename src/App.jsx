@@ -50,8 +50,8 @@ function App() {
           <Route path="/verify-otp" element={<VerifyOtp />} />
 
           {/* Protected User Routes */}
-          <Route path="/lost-item" element={<ProtectedRoute><LostItem /></ProtectedRoute>} />
-          <Route path="/found-item" element={<ProtectedRoute><FoundItem /></ProtectedRoute>} />
+          <Route path="/lost-item" element={<LostItem />} />
+          <Route path="/found-item" element={<FoundItem />} />
           <Route path="/report" element={<ProtectedRoute><Report /></ProtectedRoute>} />
           <Route path="/report-lost" element={<ProtectedRoute><ReportLost /></ProtectedRoute>} />
           <Route path="/report-found" element={<ProtectedRoute><ReportFound /></ProtectedRoute>} />

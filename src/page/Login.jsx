@@ -110,7 +110,7 @@ const Login = () => {
               ? "bg-rose-50 text-rose-600 border border-rose-100"
               : "bg-blue-50 text-blue-600 border border-blue-100"}`}>
             <div className={`w-1.5 h-1.5 rounded-full ${isAdmin ? "bg-rose-500" : "bg-blue-500"}`} />
-            {isAdmin ? "Admin credentials use karein" : "loging in as an regular user"}
+            {isAdmin ? "use admin credentials to login as an admin" : "loging in as an regular user"}
           </div>
 
           {/* Form — sirf email, koi OTP screen nahi */}

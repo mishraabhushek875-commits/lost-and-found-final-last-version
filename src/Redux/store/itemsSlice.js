@@ -117,7 +117,7 @@ export const myClaim = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       });
-
+      console.log(res);
       return res.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "Network error");
